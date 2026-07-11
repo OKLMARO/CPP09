@@ -1,33 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.cpp                                           :+:      :+:    :+:   */
+/*   RPN.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: oamairi <oamairi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/07/09 15:10:32 by oamairi           #+#    #+#             */
-/*   Updated: 2026/07/11 13:35:44 by oamairi          ###   ########.fr       */
+/*   Created: 2026/07/11 10:56:12 by oamairi           #+#    #+#             */
+/*   Updated: 2026/07/11 22:09:24 by oamairi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "BitcoinExchange.hpp"
+#pragma once
 
-int	main(int ac, char **av)
+#include <deque>
+#include <cstdlib>
+#include <iostream>
+
+class RPN
 {
-	if (ac != 2)
-	{
-		throw BitcoinExchange::BitcoinExchangeFileErrorException();
-		return 1;
-	}
-	try
-	{
-		BitcoinExchange test;
-		test.run(av[1]);
-	}
-	catch(const std::exception& e)
-	{
-		std::cerr << e.what() << '\n';
-		return 1;
-	}
-	return 0;
-}
+private:
+	std::deque<double>	_data;
+public:
+	RPN();
+	RPN(const RPN &obj);
+
+	bool	run(std::string str);
+	void	affichLastData();
+
+	RPN	&operator=(const RPN &obj);
+
+	~RPN();
+};

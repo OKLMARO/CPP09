@@ -5,29 +5,26 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: oamairi <oamairi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/07/09 15:10:32 by oamairi           #+#    #+#             */
-/*   Updated: 2026/07/11 13:35:44 by oamairi          ###   ########.fr       */
+/*   Created: 2026/07/11 10:56:04 by oamairi           #+#    #+#             */
+/*   Updated: 2026/07/11 22:08:33 by oamairi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "BitcoinExchange.hpp"
+#include "RPN.hpp"
 
 int	main(int ac, char **av)
 {
 	if (ac != 2)
 	{
-		throw BitcoinExchange::BitcoinExchangeFileErrorException();
+		std::cerr << "Error\n";
 		return 1;
 	}
-	try
+	RPN rpn;
+	if (rpn.run(av[1]) == false)
 	{
-		BitcoinExchange test;
-		test.run(av[1]);
-	}
-	catch(const std::exception& e)
-	{
-		std::cerr << e.what() << '\n';
+		std::cerr << "Error\n";
 		return 1;
 	}
+	rpn.affichLastData();
 	return 0;
 }

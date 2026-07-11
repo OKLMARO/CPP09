@@ -6,7 +6,7 @@
 /*   By: oamairi <oamairi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/07 12:06:26 by oamairi           #+#    #+#             */
-/*   Updated: 2026/07/10 01:46:26 by oamairi          ###   ########.fr       */
+/*   Updated: 2026/07/11 13:35:22 by oamairi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -179,5 +179,5 @@ BitcoinExchange::~BitcoinExchange() {};
 
 const char	*BitcoinExchange::BitcoinExchangeFileErrorException::what() const throw()
 {
-	return "File not open";
+	return "Error: could not open file.";
 }

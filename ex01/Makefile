@@ -5,18 +5,18 @@
 #                                                     +:+ +:+         +:+      #
 #    By: oamairi <oamairi@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2026/07/07 11:53:56 by oamairi           #+#    #+#              #
-#    Updated: 2026/07/11 13:14:40 by oamairi          ###   ########.fr        #
+#    Created: 2026/07/11 10:56:07 by oamairi           #+#    #+#              #
+#    Updated: 2026/07/11 13:15:01 by oamairi          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME	=	btc
+NAME	=	RPN
 
 CC		=	c++
 
 CFLAGS	=	-Wall -Wextra -Werror -std=c++98
 
-SRCS	=	BitcoinExchange.cpp main.cpp
+SRCS	=	RPN.cpp main.cpp
 
 OBJS	=	$(SRCS:.cpp=.o)
 
