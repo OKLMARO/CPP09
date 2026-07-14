@@ -6,20 +6,20 @@
 /*   By: oamairi <oamairi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/11 10:56:12 by oamairi           #+#    #+#             */
-/*   Updated: 2026/07/11 22:09:24 by oamairi          ###   ########.fr       */
+/*   Updated: 2026/07/14 14:53:39 by oamairi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
-#include <deque>
+#include <stack>
 #include <cstdlib>
 #include <iostream>
 
 class RPN
 {
 private:
-	std::deque<double>	_data;
+	std::stack<double>	_data;
 public:
 	RPN();
 	RPN(const RPN &obj);

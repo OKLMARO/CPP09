@@ -6,36 +6,36 @@
 /*   By: oamairi <oamairi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/11 22:21:07 by oamairi           #+#    #+#             */
-/*   Updated: 2026/07/14 13:37:00 by oamairi          ###   ########.fr       */
+/*   Updated: 2026/07/14 16:25:04 by oamairi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
-#include <list>
+#include <deque>
 #include <ctime>
 #include <vector>
 #include <climits>
 #include <cstdlib>
 #include <iostream>
 #include <algorithm>
+#include <sys/time.h>
 
 class PmergeMe
 {
 private:
-	std::list<int>		_dataList;
+	std::deque<int>		_dataDeque;
 	std::vector<int>	_dataVector;
 
-	int					suiteJacobsthal(int n);
-	std::vector<int>	buildJacobOrder(size_t size);
+	int	suiteJacobsthal(int n);
 
-	std::vector<std::pair<int, int> >	makePair(std::vector<int> &grands);
-	std::vector<int>					lowPair(std::vector<std::pair<int, int> > &vecPair);
-	std::vector<int>					highPair(std::vector<std::pair<int, int> > &vecPair);
-	void								doGreatPair(std::vector<std::pair<int, int> > &vecPair);
+	std::vector<int>					buildJacobOrderVec(size_t size);
+	std::vector<int>					fordJohnsonVec(std::vector<int> grands);
+	void								dichotomieVec(std::vector<int> &vec, int n);
 
-	std::vector<int>	fordJohnsonVec(std::vector<int> grands);
-	void				dichotomieVec(std::vector<int> &vec, int n, size_t bound);
+	std::deque<int>						buildJacobOrderDeque(size_t size);
+	std::deque<int>						fordJohnsonDeque(std::deque<int> grands);
+	void								dichotomieDeque(std::deque<int> &deque, int n);
 public:
 	PmergeMe();
 	PmergeMe(const PmergeMe &obj);

@@ -6,7 +6,7 @@
 #    By: oamairi <oamairi@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/07/11 22:20:59 by oamairi           #+#    #+#              #
-#    Updated: 2026/07/11 22:21:46 by oamairi          ###   ########.fr        #
+#    Updated: 2026/07/14 15:07:01 by oamairi          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,7 @@ NAME	=	PmergeMe
 
 CC		=	c++
 
-CFLAGS	=	-Wall -Wextra -Werror -std=c++98
+CFLAGS	=	-Wall -Wextra -Werror -std=c++98 -g
 
 SRCS	=	PmergeMe.cpp main.cpp
 

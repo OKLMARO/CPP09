@@ -6,7 +6,7 @@
 /*   By: oamairi <oamairi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/11 10:56:09 by oamairi           #+#    #+#             */
-/*   Updated: 2026/07/11 22:06:25 by oamairi          ###   ########.fr       */
+/*   Updated: 2026/07/14 14:57:45 by oamairi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,17 +28,17 @@ bool	RPN::run(std::string str)
 		else if (isdigit(str[i]))
 		{
 			std::string temp(1, str[i]);
-			_data.push_back(std::atof(temp.c_str()));
+			_data.push(std::atof(temp.c_str()));
 			i++;
 		}
 		else if (str[i] == '*' || str[i] == '/' || str[i] == '+' || str[i] == '-')
 		{
 			if (_data.size() < 2)
 				return false;
-			double b = _data.back();
-			_data.pop_back();
-			double a = _data.back();
-			_data.pop_back();
+			double b = _data.top();
+			_data.pop();
+			double a = _data.top();
+			_data.pop();
 			if (str[i] == '*')
 				a = a * b;
 			else if (str[i] == '/')
@@ -51,7 +51,7 @@ bool	RPN::run(std::string str)
 				a = a + b;
 			else if (str[i] == '-')
 				a = a - b;
-			_data.push_back(a);
+			_data.push(a);
 			i++;
 		}
 	}
@@ -63,7 +63,7 @@ bool	RPN::run(std::string str)
 void	RPN::affichLastData()
 {
 	if (_data.size() >= 1)
-		std::cout << _data.back() << "\n";
+		std::cout << _data.top() << "\n";
 }
 
 RPN	&RPN::operator=(const RPN &obj)

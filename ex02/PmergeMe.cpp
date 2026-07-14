@@ -6,7 +6,7 @@
 /*   By: oamairi <oamairi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/11 22:21:05 by oamairi           #+#    #+#             */
-/*   Updated: 2026/07/14 13:39:21 by oamairi          ###   ########.fr       */
+/*   Updated: 2026/07/14 17:37:17 by oamairi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,115 @@ int	PmergeMe::suiteJacobsthal(int n)
 		return (suiteJacobsthal(n - 1) + 2 * suiteJacobsthal(n - 2));
 }
 
-std::vector<int> PmergeMe::buildJacobOrder(size_t size)
+std::vector<int>	PmergeMe::buildJacobOrderVec(size_t size)
 {
+	size_t n = 2;
 	std::vector<int> order;
+
+	while ((size_t) suiteJacobsthal(n) < size)
+	{
+		int curr = suiteJacobsthal(n);
+		int prev = suiteJacobsthal(n - 1);
+		for (int j = curr - 1; j >= prev; j--)
+		{
+			if (j < (int)size)
+				order.push_back(j);
+		}
+		n++;
+	}
+	size_t j = suiteJacobsthal(n - 1);
+	while (j < size)
+	{
+		order.push_back(j);
+		j++;
+	}
+	return order;
+}
+
+void	PmergeMe::dichotomieVec(std::vector<int> &vec, int n)
+{
+	int min = 0;
+	int max = vec.size();
+
+	while (min < max)
+	{
+		int mid = min + (max - min) / 2;
+		if (vec.at(mid) < n)
+			min = mid + 1;
+		else
+			max = mid;
+	}
+	vec.insert(vec.begin() + min, n);
+}
+
+std::vector<int> PmergeMe::fordJohnsonVec(std::vector<int> ctn)
+{
+	if (ctn.size() <= 1)
+		return ctn;
+
+	size_t i = 0;
+	int	impaire = INT_MIN;
+	std::vector<std::pair<int, int> > paire;
+
+	while (i + 1 < ctn.size())
+	{
+		paire.push_back(std::make_pair(ctn.at(i), ctn.at(i + 1)));
+		i += 2;
+	}
+	if (ctn.size() % 2 == 1)
+		impaire = ctn.at(ctn.size() - 1);
+	for (size_t i = 0; i < paire.size(); i++)
+	{
+		if (paire.at(i).first < paire.at(i).second)
+			std::swap(paire.at(i).first, paire.at(i).second);
+	}
+
+	std::vector<int> grand;
+	for (size_t i = 0; i < paire.size(); i++)
+		grand.push_back(paire.at(i).first);
+	std::vector<int> petit;
+	for (size_t i = 0; i < paire.size(); i++)
+		petit.push_back(paire.at(i).second);
+
+	std::vector<int> grandCopie = grand;
+	grand = fordJohnsonVec(grand);
+
+	std::vector<int> petitCopie;
+	for (size_t i = 0; i < grand.size(); i++)
+	{
+		for (size_t j = 0; j < grandCopie.size(); j++)
+		{
+			if (grandCopie.at(j) == grand.at(i))
+			{
+				petitCopie.push_back(petit.at(j));
+				break;
+			}
+		}
+	}
+
+	petit = petitCopie;
+
+	if (!petit.empty())
+		grand.insert(grand.begin(), petit.at(0));
+
+	std::vector<int> ordre = buildJacobOrderVec(petit.size());
+
+	for (size_t i = 0; i < ordre.size(); i++)
+	{
+		if ((size_t) ordre.at(i) >= petit.size() || ordre.at(i) == 0)
+			continue;
+		dichotomieVec(grand, petit.at(ordre.at(i)));
+	}
+
+	if (impaire != INT_MIN)
+		dichotomieVec(grand, impaire);
+
+	return grand;
+}
+
+std::deque<int> PmergeMe::buildJacobOrderDeque(size_t size)
+{
+	std::deque<int> order;
 	size_t n = 2;
 	while ((size_t)suiteJacobsthal(n) < size)
 	{
@@ -44,121 +150,93 @@ std::vector<int> PmergeMe::buildJacobOrder(size_t size)
 	return order;
 }
 
-std::vector<std::pair<int, int> > PmergeMe::makePair(std::vector<int> &grands)
+void PmergeMe::dichotomieDeque(std::deque<int> &deque, int n)
 {
-	size_t i = 0;
-	std::vector<std::pair<int, int> > vecPair;
+	int min = 0;
+	int max = deque.size();
 
-	while (i + 1 < grands.size())
+	while (min < max)
 	{
-		vecPair.push_back(std::make_pair(grands[i], grands[i + 1]));
+		int mid = min + (max - min) / 2;
+		if (deque.at(mid) < n)
+			min = mid + 1;
+		else
+			max = mid;
+	}
+	deque.insert(deque.begin() + min, n);
+}
+
+std::deque<int> PmergeMe::fordJohnsonDeque(std::deque<int> ctn)
+{
+	if (ctn.size() <= 1)
+		return ctn;
+
+	size_t i = 0;
+	int	impaire = INT_MIN;
+	std::deque<std::pair<int, int> > paire;
+
+	while (i + 1 < ctn.size())
+	{
+		paire.push_back(std::make_pair(ctn.at(i), ctn.at(i + 1)));
 		i += 2;
 	}
-	if (grands.size() % 2 == 1)
-		vecPair.push_back(std::make_pair(grands[grands.size() - 1], -1));
+	if (ctn.size() % 2 == 1)
+		impaire = ctn.at(ctn.size() - 1);
 
-	return vecPair;
-}
-
-void PmergeMe::doGreatPair(std::vector<std::pair<int, int> > &vecPair)
-{
-	for (size_t i = 0; i < vecPair.size(); i++)
+	for (size_t i = 0; i < paire.size(); i++)
 	{
-		if (vecPair[i].second != -1 && vecPair[i].first > vecPair[i].second)
-			std::swap(vecPair[i].first, vecPair[i].second);
+		if (paire.at(i).first < paire.at(i).second)
+			std::swap(paire.at(i).first, paire.at(i).second);
 	}
-}
 
-std::vector<int> PmergeMe::lowPair(std::vector<std::pair<int, int> > &vecPair)
-{
-	std::vector<int> small;
-	for (size_t i = 0; i < vecPair.size(); i++)
-		small.push_back(vecPair[i].first);
-	return small;
-}
+	std::deque<int> grand;
+	for (size_t i = 0; i < paire.size(); i++)
+		grand.push_back(paire.at(i).first);
+	std::deque<int> petit;
+	for (size_t i = 0; i < paire.size(); i++)
+		petit.push_back(paire.at(i).second);
 
-std::vector<int> PmergeMe::highPair(std::vector<std::pair<int, int> > &vecPair)
-{
-	std::vector<int> pair;
-	for (size_t i = 0; i < vecPair.size(); i++)
-		pair.push_back(vecPair[i].second);
-	return pair;
-}
+	std::deque<int> grandCopie = grand;
+	grand = fordJohnsonDeque(grand);
 
-void PmergeMe::dichotomieVec(std::vector<int> &vec, int n, size_t bound)
-{
-	int low = 0;
-	int high = static_cast<int>(bound);
-
-	while (low < high)
+	std::deque<int> petitCopie;
+	for (size_t i = 0; i < grand.size(); i++)
 	{
-		int mid = low + (high - low) / 2;
-		if (vec.at(mid) < n)
-			low = mid + 1;
-		else
-			high = mid;
-	}
-	vec.insert(vec.begin() + low, n);
-}
-
-std::vector<int> PmergeMe::fordJohnsonVec(std::vector<int> grands)
-{
-	if (grands.size() <= 1)
-		return grands;
-
-	std::vector<std::pair<int, int> > vecPair = makePair(grands);
-	doGreatPair(vecPair);
-
-	std::vector<int> small = lowPair(vecPair);
-	std::vector<int> higherPair = highPair(vecPair);
-
-	bool hasOdd = (higherPair.back() == -1 && grands.size() % 2 == 1);
-	if (hasOdd)
-		higherPair.pop_back();
-
-	std::vector<int> originalHigherPair = higherPair;
-	higherPair = fordJohnsonVec(higherPair);
-
-	std::vector<int> newSmall;
-	for (size_t i = 0; i < higherPair.size(); i++)
-	{
-		for (size_t j = 0; j < originalHigherPair.size(); j++)
+		for (size_t j = 0; j < grandCopie.size(); j++)
 		{
-			if (originalHigherPair[j] == higherPair[i])
+			if (grandCopie.at(j) == grand.at(i))
 			{
-				newSmall.push_back(small[j]);
+				petitCopie.push_back(petit.at(j));
 				break;
 			}
 		}
 	}
-	small = newSmall;
 
-	if (!small.empty())
-		higherPair.insert(higherPair.begin(), small[0]);
+	petit = petitCopie;
 
-	std::vector<int> sortedHigherPair(higherPair.begin() + (small.empty() ? 0 : 1), higherPair.end());
-	std::vector<int> order = buildJacobOrder(small.size());
+	if (!petit.empty())
+		grand.insert(grand.begin(), petit.at(0));
 
-	for (size_t i = 0; i < order.size(); i++)
+	std::deque<int> ordre = buildJacobOrderDeque(petit.size());
+
+	for (size_t i = 0; i < ordre.size(); i++)
 	{
-		if ((size_t)order[i] >= small.size() || order[i] == 0)
+		if ((size_t) ordre.at(i) >= petit.size() || ordre.at(i) == 0)
 			continue;
-		size_t position = std::find(higherPair.begin(), higherPair.end(),
-										sortedHigherPair[order[i] - 1]) - higherPair.begin();
-		dichotomieVec(higherPair, small[order[i]], position + 1);
+		dichotomieDeque(grand, petit.at(ordre.at(i)));
 	}
 
-	if (hasOdd)
-		dichotomieVec(higherPair, grands.back(), higherPair.size());
+	if (impaire != INT_MIN)
+		dichotomieDeque(grand, impaire);
 
-	return higherPair;
+	return grand;
 }
 
 PmergeMe::PmergeMe() {};
 
 PmergeMe::PmergeMe(const PmergeMe &obj)
 {
-	_dataList = obj._dataList;
+	_dataDeque = obj._dataDeque;
 	_dataVector = obj._dataVector;
 }
 
@@ -176,7 +254,7 @@ bool	PmergeMe::run(char **av)
 		}
 		if (std::atoll(av[i]) > INT_MAX)
 			return false;
-		_dataList.push_back(std::atoi(av[i]));
+		_dataDeque.push_back(std::atoi(av[i]));
 		_dataVector.push_back(std::atoi(av[i]));
 		i++;
 	}
@@ -186,22 +264,26 @@ bool	PmergeMe::run(char **av)
 	for (size_t i = 0; i < _dataVector.size(); i++)
 		std::cout << " " << _dataVector.at(i);
 	std::cout << "\n";
-	std::vector<std::pair<int, int> >	vec;
-	for (size_t i = 0; i + 1 < _dataVector.size(); i = i + 2)
-	{
-		if (_dataVector.at(i) > _dataVector.at(i + 1))
-			vec.push_back(std::make_pair(_dataVector.at(i), _dataVector.at(i + 1)));
-		else
-			vec.push_back(std::make_pair(_dataVector.at(i + 1), _dataVector.at(i)));
-	}
-	clock_t startvec = clock();
+	struct timeval startvec, endvec;
+	gettimeofday(&startvec, NULL);
 	_dataVector = fordJohnsonVec(_dataVector);
-	clock_t endvec = clock();
+	gettimeofday(&endvec, NULL);
+	long microseconds = (endvec.tv_sec - startvec.tv_sec) * 1000000L + (endvec.tv_usec - startvec.tv_usec);
 	std::cout << "After:";
 	for (size_t i = 0; i < _dataVector.size(); i++)
 		std::cout << " " << _dataVector.at(i);
 	std::cout << "\n";
-	std::cout << "Time to process a range of " << _dataVector.size() << " elements with std::vector : " << endvec - startvec << "\n";
+	std::cout << "Time to process a range of " << _dataVector.size() << " elements with std::vector : " << microseconds << " us\n";
+	struct timeval startdeque, endeque;
+	gettimeofday(&startdeque, NULL);
+	_dataDeque = fordJohnsonDeque(_dataDeque);
+	gettimeofday(&endeque, NULL);
+	microseconds = (endeque.tv_sec - startdeque.tv_sec) * 1000000L + (endeque.tv_usec - startdeque.tv_usec);
+	/*std::cout << "After:";
+	for (size_t i = 0; i < _dataDeque.size(); i++)
+		std::cout << " " << _dataDeque.at(i);
+	std::cout << "\n";*/
+	std::cout << "Time to process a range of " << _dataDeque.size() << " elements with std::deque : " << microseconds << " us\n";
 	return true;
 }
 
@@ -209,7 +291,7 @@ PmergeMe	&PmergeMe::operator=(const PmergeMe &obj)
 {
 	if (this != &obj)
 	{
-		_dataList = obj._dataList;
+		_dataDeque = obj._dataDeque;
 		_dataVector = obj._dataVector;
 	}
 	return *this;
