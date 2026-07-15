@@ -6,7 +6,7 @@
 /*   By: oamairi <oamairi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/09 15:10:32 by oamairi           #+#    #+#             */
-/*   Updated: 2026/07/11 13:35:44 by oamairi          ###   ########.fr       */
+/*   Updated: 2026/07/15 15:18:27 by oamairi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ int	main(int ac, char **av)
 {
 	if (ac != 2)
 	{
-		throw BitcoinExchange::BitcoinExchangeFileErrorException();
+		std::cerr << "Error: bad usage\n";
 		return 1;
 	}
 	try
